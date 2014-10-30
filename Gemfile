@@ -1,5 +1,8 @@
-# A sample Gemfile
-source "https://rubygems.org"
-ruby '1.9.3', :engine => 'jruby', :engine_version => '1.7.16'
-gem "puma"
-gem "sinatra"
+source 'https://rubygems.org'
+
+gem 'activerecord-jdbcsqlite3-adapter', :platform => :jruby
+gem 'puma'
+gem 'rake'
+gem 'sinatra'
+gem 'sinatra-activerecord'
+gem 'activerecord'

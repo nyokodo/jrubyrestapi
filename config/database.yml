@@ -1,0 +1,7 @@
+# SQLite3
+# Can be split off into separate databases for dev/test/prod or any other configuration
+# not done for the purposes of this demonstration.
+
+development:
+  adapter: jdbcsqlite3
+  database: db/development.sqlite3

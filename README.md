@@ -10,6 +10,8 @@ This is a simple REST API developed in JRuby as an example of my work.
     jruby -S gem install bundler
 3. Run Bundler to install project dependencies:
     jruby -S bundle install
+4. Create database:
+    jruby -S rake db:setup
 
 ## Run Instructions
 
