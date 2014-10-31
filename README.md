@@ -15,3 +15,4 @@ This is a simple REST API developed in JRuby as an example of my work.
 
 ## Run Instructions
 
+* To start the server run: jruby -S rackup -o localhost -p 8999

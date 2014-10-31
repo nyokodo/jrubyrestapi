@@ -18,7 +18,9 @@ class EventApp < Sinatra::Base
     end
 
     get '/events/?' do
-        p "List all events"
+        # List all events
+        @events = Event.all
+        @events.to_json
     end
 
     delete '/events' do
@@ -26,7 +28,9 @@ class EventApp < Sinatra::Base
     end
 
     get '/events/:id' do
-        p "Show event :id"
+        # Show event with :id
+        @event = Event.find_by_id(params[:id])
+        @event.to_json
     end
 
     put '/events/:id' do
