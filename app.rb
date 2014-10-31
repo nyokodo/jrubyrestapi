@@ -10,84 +10,90 @@
 # of https.
 #
 
-require 'sinatra'
 require 'sinatra/activerecord'
 require 'model/event'
+require 'appbase'
 
-configure { set :server, :puma } 
 
-class EventApp < Sinatra::Base
-    before do
-        # Set the content_type for all requests to JSON and parse data for POST/PUT
-        content_type :json
-        method = request.request_method
-        if method == 'POST' or method == 'PUT'
-            @data = JSON.parse request.body.read
-        end
-    end
+class EventApp < AppBase
+    # This Class defines all the REST Requests
     
     post '/events' do
         # Add a new event.
-        Event.create(data: @data['data'])
+        event = Event.create(data: @data['data'])
+        
+        if event.persisted?
+            return build_response('ok', 'Event created.')
+        else
+            status 500
+            return build_response('error', event.errors.messages)
+        end
     end
 
     get '/events/?' do
         # Returns a list of all events in the database.
-        events = Event.all
-        events.to_json
+        if Event.exists?
+            events = Event.all
+            return events.to_json
+        else
+            status 500
+            build_response('error', 'No events exist.')
+        end
     end
 
     delete '/events' do
         # Delete all events.
-        Event.destroy_all
+        if Event.exists?
+            Event.destroy_all
+            return build_response('ok', 'All events deleted.')
+        else
+            status 500
+            return build_response('error', 'No events exist.')
+        end
     end
 
     get '/events/:id' do
         # Return a particular event identified by :id
         event = Event.find_by_id(params[:id])
-        event.to_json
+        
+        if !event.nil?
+            return event.to_json
+        else
+            status 500
+            return build_response('error', 'No such event exists.')
+        end
     end
 
     put '/events/:id' do
         # Update an existing event.
         event = Event.find_by_id(params[:id])
-        event.data = @data['data']
-        event.save
+        
+        if !event.nil?
+            event.data = @data['data']
+            event.save
+            
+            if event.persisted?
+                return build_response('ok', 'Event has been updated.')
+            else
+                status 500
+                return build_response('error', event.errors.messages)
+            end
+        else
+            status 500
+            return build_response('error', 'No such event exists.')
+        end
     end
 
     delete '/events/:id' do
         # Delete event identified by :id
         event = Event.find_by_id(params[:id])
-        event.destroy
-    end
-    
-    after do
-        # ActiveRecord is nice enough to implicitly open a connection but
-        # it does not implicitly relinquish them in this case.
-        close_connections
-    end
-    
-    not_found do
-        # Called when a URI is requested that doesn't exist.
-        status 404
-        error = {}
-        error['status'] = 'InvalidUri' 
-        error['message'] = 'The requested URI does not exist on the server.'
-        error.to_json
-    end
-    
-    error do
-        # Called when an exception occurs in a route or filter.
-        close_connections
-        status 500
-        error = {}
-        error['status'] = 'InternalError' 
-        error['message'] = 'There has been an unhandled exception process the request.'
-        error.to_json
-    end
-    
-    def close_connections
-        # Close all connections held by this thread.
-        ActiveRecord::Base.clear_active_connections!
+        
+        if !event.nil?
+            event.destroy
+            return build_response('ok', 'Event has been deleted.')
+        else
+            status 500
+            return build_response('error', 'No such event exists.')
+        end
     end
 end
