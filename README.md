@@ -32,11 +32,12 @@ This is a simple REST API developed in JRuby as an example of my work.
 Add an event
 
 ```
-curl -X POST "http://localhost:8999/events" -H "Content-Type: application/json" -d '{"data":"NAME is now at LATITUDE/LONGITUDE"}'
+curl -X POST "http://localhost:8999/events" -H "Content-Type: application/json" -d '{"data":"NAME is now at LATITUDE/LONGITUDE"}' -i
 ```
 
 On Success:
-HTTP Status Code 200
+HTTP Status Code 201
+HTTP Location: http://localhost:8999/events/:id
 ```javascript
 {
    "status": "ok",
@@ -57,7 +58,7 @@ HTTP Status Code 500
 List all events
 
 ```
-curl "http://localhost:8999/events"
+curl "http://localhost:8999/events" -i
 ```
 
 On Success:
@@ -70,20 +71,17 @@ list of
 }
 ```
 
-On Failure:
-HTTP Status Code 500
+When no events exist:
+HTTP Status Code 200
 ```javascript
-{
-   "status": "error",
-   "message": "No events exist."
-}
+[]
 ```
 
 ### DELETE /events
 Delete all events
 
 ```
-curl -X DELETE "http://localhost:8999/events"
+curl -X DELETE "http://localhost:8999/events" -i
 ```
 
 On Success:
@@ -96,7 +94,7 @@ HTTP Status Code 200
 ```
 
 On Failure:
-HTTP Status Code 500
+HTTP Status Code 404
 ```javascript
 {
    "status": "error",
@@ -108,7 +106,7 @@ HTTP Status Code 500
 Return event
 
 ```
-curl "http://localhost:8999/events/2"
+curl "http://localhost:8999/events/2" -i
 ```
 
 On Success:
@@ -121,7 +119,7 @@ HTTP Status Code 200
 ```
 
 On Failure:
-HTTP Status Code 500
+HTTP Status Code 404
 ```javascript
 {
    "status": "error",
@@ -133,7 +131,7 @@ HTTP Status Code 500
 Update event
 
 ```
-curl -X PUT "http://localhost:8999/events/2" -H "Content-Type: application/json" -d '{"data":"NAME is now at LATITUDE/LONGITUDE"}'
+curl -X PUT "http://localhost:8999/events/2" -H "Content-Type: application/json" -d '{"data":"NAME is now at LATITUDE/LONGITUDE"}' -i
 ```
 
 On Success:
@@ -146,7 +144,7 @@ HTTP Status Code 200
 ```
 
 On Failure:
-HTTP Status Code 500
+HTTP Status Code 404
 ```javascript
 {
    "status": "error",
@@ -158,7 +156,7 @@ HTTP Status Code 500
 Update event
 
 ```
-curl -X DELETE "http://localhost:8999/events/2"
+curl -X DELETE "http://localhost:8999/events/2" -i
 ```
 
 On Success:
@@ -171,7 +169,7 @@ HTTP Status Code 200
 ```
 
 On Failure:
-HTTP Status Code 500
+HTTP Status Code 404
 ```javascript
 {
    "status": "error",

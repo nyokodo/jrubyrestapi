@@ -23,6 +23,8 @@ class EventApp < AppBase
         event = Event.create(data: @data['data'])
         
         if event.persisted?
+            # Return the Location Header for the newly created event.
+            headers "Location" => "#{request.url}/#{event.id}"
             return build_response('ok', 'Event created.')
         else
             status 500
@@ -36,8 +38,8 @@ class EventApp < AppBase
             events = Event.all
             return events.to_json
         else
-            status 500
-            build_response('error', 'No events exist.')
+            # There are no events so return an empty array
+            return Array.new.to_json
         end
     end
 
@@ -47,7 +49,7 @@ class EventApp < AppBase
             Event.destroy_all
             return build_response('ok', 'All events deleted.')
         else
-            status 500
+            status 404
             return build_response('error', 'No events exist.')
         end
     end
@@ -59,7 +61,7 @@ class EventApp < AppBase
         if !event.nil?
             return event.to_json
         else
-            status 500
+            status 404
             return build_response('error', 'No such event exists.')
         end
     end
@@ -72,14 +74,14 @@ class EventApp < AppBase
             event.data = @data['data']
             event.save
             
-            if event.persisted?
+            if event.valid? and event.persisted?
                 return build_response('ok', 'Event has been updated.')
             else
                 status 500
                 return build_response('error', event.errors.messages)
             end
         else
-            status 500
+            status 404
             return build_response('error', 'No such event exists.')
         end
     end
@@ -92,7 +94,7 @@ class EventApp < AppBase
             event.destroy
             return build_response('ok', 'Event has been deleted.')
         else
-            status 500
+            status 404
             return build_response('error', 'No such event exists.')
         end
     end
