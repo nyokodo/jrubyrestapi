@@ -123,7 +123,7 @@ HTTP Status Code 404
 ```javascript
 {
    "status": "error",
-   "message": "No such event exists."
+   "message": "InvalidUri: The requested URI does not exist on the server."
 }
 ```
 
@@ -148,7 +148,7 @@ HTTP Status Code 404
 ```javascript
 {
    "status": "error",
-   "message": "No such event exists."
+   "message": "InvalidUri: The requested URI does not exist on the server."
 }
 ```
 
@@ -173,6 +173,6 @@ HTTP Status Code 404
 ```javascript
 {
    "status": "error",
-   "message": "No such event exists."
+   "message": "InvalidUri: The requested URI does not exist on the server."
 }
 ```

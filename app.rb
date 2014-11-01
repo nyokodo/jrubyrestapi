@@ -61,9 +61,6 @@ class EventApp < AppBase
         if !event.nil?
             return event.to_json
         else
-            status 404
-            return build_response('error', 'No such event exists.')
-        end
     end
 
     put '/events/:id' do
@@ -81,9 +78,6 @@ class EventApp < AppBase
                 return build_response('error', event.errors.messages)
             end
         else
-            status 404
-            return build_response('error', 'No such event exists.')
-        end
     end
 
     delete '/events/:id' do
@@ -94,8 +88,5 @@ class EventApp < AppBase
             event.destroy
             return build_response('ok', 'Event has been deleted.')
         else
-            status 404
-            return build_response('error', 'No such event exists.')
-        end
     end
 end
